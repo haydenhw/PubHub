@@ -23,6 +23,11 @@ public class Tag {
         this.tagName = name;
     }
     
+    public String getIsbn13() {
+    	return this.isbn13;
+    	
+    }
+    
     public String getName() {
     	return this.tagName;
     }

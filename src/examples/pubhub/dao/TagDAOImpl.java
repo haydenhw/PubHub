@@ -10,52 +10,100 @@ import java.util.ArrayList;
 import examples.pubhub.model.Tag;
 import examples.pubhub.utilities.DAOUtilities;
 
-
 public class TagDAOImpl implements TagDAO {
 	Connection connection = null;
 	PreparedStatement stmt = null;
 
-  /*------------------------------------------------------------------------------------------------*/
+	/*------------------------------------------------------------------------------------------------*/
 
+	// @Override
+	public List<Tag> getAllTagsForBook(String isbn) {
+		List<Tag> tags = new ArrayList<>();
 
-  //@Override
-  public List<Tag> getAllTagsForBook(String isbn){
-	  List<Tag> tags = new ArrayList<>();
-	  
-	  
-	  try {
-		 connection = DAOUtilities.getConnection(); 
-		 String sql = "SELECT * FROM book_tags WHERE isbn_13=?";
-		 stmt = connection.prepareStatement(sql);
-		 
-		 stmt.setString(1, isbn);
-		 
-		 ResultSet rs = stmt.executeQuery();
+		try {
+			connection = DAOUtilities.getConnection();
+			String sql = "SELECT * FROM book_tags WHERE isbn_13=?";
+			stmt = connection.prepareStatement(sql);
 
-		 while (rs.next()) {
-			Tag tag = new Tag(); 
+			stmt.setString(1, isbn);
+
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				Tag tag = new Tag();
+
+				tag.setIsbn13(rs.getString("isbn_13"));
+				tag.setName(rs.getString("tag_name"));
+
+				tags.add(tag);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+
+		return tags;
+	}
+
+	/*------------------------------------------------------------------------------------------------*/
+
+	// @Override
+	public boolean addTag(Tag tag) {
+		try {
+			connection = DAOUtilities.getConnection();
+			String sql = "INSERT INTO Book_Tags VALUES (?, ?)";
+			stmt = connection.prepareStatement(sql);
+
+			stmt.setString(1, tag.getIsbn13());
+			stmt.setString(2, tag.getName());
+
+			if (stmt.executeUpdate() != 0) 
+				return true;
+			else
+				return false;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			closeResources();
+		}
+	}
+
+	/*------------------------------------------------------------------------------------------------*/
+	
+	//@Override
+	public boolean deleteTagByISBNAndName(String isbn, String name) {
+		try {
+			connection = DAOUtilities.getConnection();
+			String sql = "DELETE FROM Book_Tags WHERE isbn_13=? AND tag_name=?";
+			stmt = connection.prepareStatement(sql);
 			
-			tag.setIsbn13(rs.getString("isbn_13"));
-			tag.setName(rs.getString("tag_name"));
+			stmt.setString(1, isbn);
+			stmt.setString(2, name);
 			
-			tags.add(tag);
-		 }
-		 
-	  } catch (SQLException e) {
-		  e.printStackTrace();
-	  } finally {
-		  closeResources();
-	  }
-	  
+			if (stmt.executeUpdate() != 0)
+				return true;
+			else
+				return false;
 
-	 return tags; 
-  }
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+			
+		} finally {
+			closeResources();
+		}
+	}
+	
+	
 
+	/*------------------------------------------------------------------------------------------------*/
 
-  /*------------------------------------------------------------------------------------------------*/
-   
-
-  private void closeResources() {
+	private void closeResources() {
 		try {
 			if (stmt != null)
 				stmt.close();
@@ -63,7 +111,7 @@ public class TagDAOImpl implements TagDAO {
 			System.out.println("Could not close statement!");
 			e.printStackTrace();
 		}
-		
+
 		try {
 			if (connection != null)
 				connection.close();
