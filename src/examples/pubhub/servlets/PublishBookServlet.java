@@ -49,6 +49,11 @@ public class PublishBookServlet extends HttpServlet {
 			book.setAuthor(req.getParameter("author"));
 			book.setPublishDate(LocalDate.now());
 			book.setPrice(Double.parseDouble(req.getParameter("price")));
+			
+			String tags = req.getParameter("tags");
+			System.out.println(tags);
+			
+			
 
 			// Uploading a file requires the data to be sent in "parts", because
 			// one HTTP packet might not be big

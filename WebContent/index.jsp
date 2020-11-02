@@ -17,9 +17,9 @@
                 <div class="col-lg-12">
 <!--                     <img class="img-responsive" src="resources/libraries/img/profile.png" alt=""> -->
                     <div class="intro-text">
-                        <span class="name">PubHubffffffff</span>
+                        <span class="name">PubHub</span>
                         <hr class="book-primary">
-                        <span class="skills">Exchange Ideasfdsafdsa.</span>
+                        <span class="skills">Exchange Ideas</span>
                     </div>
                 </div>
             </div>

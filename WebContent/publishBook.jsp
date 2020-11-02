@@ -54,6 +54,12 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
+		    <label for="tags" class="col-sm-4 control-label">Tags</label>
+		    <div class="col-sm-5">
+		      <input type="text" class="form-control" id="tags" name="tags" placeholder="Comma separated list of tgas" value="${param.tag }" />
+		    </div>
+		  </div>
+		  <div class="form-group">
 		    <label for="content" class="col-sm-4 control-label">Content</label>
 		    <div class="col-sm-5">
 		      <input type="file" class="form-control" id="content" name="content" placeholder="Content" required="required" value="${param.content }" />
