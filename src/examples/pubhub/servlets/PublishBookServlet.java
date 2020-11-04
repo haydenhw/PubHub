@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,7 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import examples.pubhub.dao.BookDAO;
+import examples.pubhub.dao.TagDAO;
 import examples.pubhub.model.Book;
+import examples.pubhub.model.Tag;
 import examples.pubhub.utilities.DAOUtilities;
 
 @MultipartConfig // This annotation tells the server that this servlet has
@@ -21,10 +25,12 @@ import examples.pubhub.utilities.DAOUtilities;
 // Notice the lack of the @WebServlet annotation? This servlet is mapped the old
 // fashioned way - Check the web.xml!
 public class PublishBookServlet extends HttpServlet {
+	private	BookDAO bookDAO = DAOUtilities.getBookDAO();
 
 	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.getRequestDispatcher("publishBook.jsp").forward(request, response);
 	}
 
@@ -32,8 +38,7 @@ public class PublishBookServlet extends HttpServlet {
 
 		String isbn13 = req.getParameter("isbn13");
 
-		BookDAO database = DAOUtilities.getBookDAO();
-		Book tempBook = database.getBookByISBN(isbn13);
+		Book tempBook = bookDAO.getBookByISBN(isbn13);
 		if (tempBook != null) {
 			// ASSERT: book with isbn already exists
 
@@ -42,18 +47,35 @@ public class PublishBookServlet extends HttpServlet {
 			req.getRequestDispatcher("publishBook.jsp").forward(req, resp);
 
 		} else {
+			boolean isSuccess = this.addBook(req, resp) && this.addTags(req, resp);
 
+			if (isSuccess) {
+				req.getSession().setAttribute("message", "Book successfully published");
+				req.getSession().setAttribute("messageClass", "alert-success");
+
+				// We use a redirect here instead of a forward, because we don't
+				// want request data to be saved. Otherwise, when
+				// a user clicks "refresh", their browser would send the data
+				// again!
+				// This would be bad data management, and it
+				// could result in duplicate rows in a database.
+				resp.sendRedirect(req.getContextPath() + "/BookPublishing");
+			} else {
+				req.getSession().setAttribute("message", "There was a problem publishing the book");
+				req.getSession().setAttribute("messageClass", "alert-danger");
+				req.getRequestDispatcher("publishBook.jsp").forward(req, resp);
+
+			}
+		}
+	}
+
+	private boolean addBook(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 			Book book = new Book();
 			book.setIsbn13(req.getParameter("isbn13"));
 			book.setTitle(req.getParameter("title"));
 			book.setAuthor(req.getParameter("author"));
 			book.setPublishDate(LocalDate.now());
 			book.setPrice(Double.parseDouble(req.getParameter("price")));
-			
-			String tags = req.getParameter("tags");
-			System.out.println(tags);
-			
-			
 
 			// Uploading a file requires the data to be sent in "parts", because
 			// one HTTP packet might not be big
@@ -73,7 +95,7 @@ public class PublishBookServlet extends HttpServlet {
 				while (is.read(buffer) != -1) {
 					os.write(buffer);
 				}
-				
+
 				book.setContent(os.toByteArray());
 
 			} catch (IOException e) {
@@ -86,26 +108,27 @@ public class PublishBookServlet extends HttpServlet {
 					os.close();
 			}
 
-			boolean isSuccess = database.addBook(book);
-			
-			if(isSuccess){
-				req.getSession().setAttribute("message", "Book successfully published");
-				req.getSession().setAttribute("messageClass", "alert-success");
+			return bookDAO.addBook(book);
+	}
 
-				// We use a redirect here instead of a forward, because we don't
-				// want request data to be saved. Otherwise, when
-				// a user clicks "refresh", their browser would send the data
-				// again!
-				// This would be bad data management, and it
-				// could result in duplicate rows in a database.
-				resp.sendRedirect(req.getContextPath() + "/BookPublishing");
-			}else {
-				req.getSession().setAttribute("message", "There was a problem publishing the book");
-				req.getSession().setAttribute("messageClass", "alert-danger");
-				req.getRequestDispatcher("publishBook.jsp").forward(req, resp);
-				
+	private boolean addTags(HttpServletRequest req, HttpServletResponse resp) {
+		TagDAO tagDAO = DAOUtilities.getTagDAO();
+
+		String[] tagNames = req.getParameter("tags").split("\\s*,\\s*");
+		// TODO ensure that no tags are duplicated. Maybe with a set? 
+		for (String name : tagNames) {
+			Tag tag = new Tag();
+			tag.setIsbn13(req.getParameter("isbn13"));
+			tag.setName(name);
+
+			boolean isSuccess = tagDAO.addTag(tag);
+
+			if (!isSuccess) {
+				return false;
 			}
 		}
+
+		return true;
 	}
 
 }
