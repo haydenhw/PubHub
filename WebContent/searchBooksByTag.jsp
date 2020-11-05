@@ -68,17 +68,6 @@
 	  </div>
 	</header>
 	
-	<section>
-	  <div class="container">
-	    Another Section
-	  </div>
-	</section>
-
-	<section class="success">
-	  <div class="container">
-	    A Third Section
-	  </div>
-	</section>
 
 
 	<!-- Footer -->
