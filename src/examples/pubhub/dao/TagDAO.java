@@ -10,5 +10,4 @@ public interface TagDAO {
 	public boolean addTag(Tag tag);
 
 	public boolean deleteTagByISBNAndName(String isbn, String name);
-//	public boolean updateTag(Tag tag);
 }

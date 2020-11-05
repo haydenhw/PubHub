@@ -16,9 +16,8 @@ import examples.pubhub.utilities.DAOUtilities;
 /*
  * This servlet will take you to the homepage for the Book Publishing module (level 100)
  */
-@WebServlet("/BookPublishing")
-public class BookPublishingServlet extends HttpServlet {
-	
+@WebServlet("/SearchBooksByTag")
+public class SearchBooksByTagServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -29,7 +28,21 @@ public class BookPublishingServlet extends HttpServlet {
 
 		// Populate the list into a variable that will be stored in the session
 		request.getSession().setAttribute("books", bookList);
-
-		request.getRequestDispatcher("bookPublishingHome.jsp").forward(request, response);
+		
+		request.getRequestDispatcher("searchBooksByTag.jsp").forward(request, response);
 	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
+		String query = request.getParameter("query");
+		System.out.println("Searching for books with tag" + query);
+
+		BookDAO dao = DAOUtilities.getBookDAO();
+		List<Book> bookList = dao.getBooksByTag(query);
+
+		// Populate the list into a variable that will be stored in the session
+		request.getSession().setAttribute("books", bookList);
+
+		request.getRequestDispatcher("searchBooksByTag.jsp").forward(request, response);
+	};
+	
 }

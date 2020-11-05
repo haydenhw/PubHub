@@ -13,6 +13,7 @@ public interface BookDAO {
 	public List<Book> getBooksByTitle(String title);
 	public List<Book> getBooksByAuthor(String author);
 	public List<Book> getBooksLessThanPrice(double price);
+	public List<Book> getBooksByTag(String tagName); 
 	public Book getBookByISBN(String isbn);
 	
 	public boolean addBook(Book book);
