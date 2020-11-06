@@ -28,6 +28,8 @@ public class SearchBooksByTagServlet extends HttpServlet {
 
 		// Populate the list into a variable that will be stored in the session
 		request.getSession().setAttribute("books", bookList);
+
+		request.getSession().setAttribute("message", "Enter a tag to filter results"); 
 		
 		request.getRequestDispatcher("searchBooksByTag.jsp").forward(request, response);
 	}
@@ -41,6 +43,12 @@ public class SearchBooksByTagServlet extends HttpServlet {
 
 		// Populate the list into a variable that will be stored in the session
 		request.getSession().setAttribute("books", bookList);
+		
+
+		
+		if (bookList.size() == 0) {
+			request.getSession().setAttribute("message", "No books found for tag '" + query + "'");
+		}
 
 		request.getRequestDispatcher("searchBooksByTag.jsp").forward(request, response);
 	};

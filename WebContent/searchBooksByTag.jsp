@@ -31,46 +31,55 @@
 		<hr class="book-primary">
 
 
-		<form action="SearchBooksByTag" method="post" class="form-inline form-group text-left m-b-md">
-			<input type="search" class="form-control w-100 mr-sm-6" id="query" name="query"
-				required="required">
+		<form action="SearchBooksByTag" method="post"
+			class="form-inline form-group text-left m-b-md">
+			<input type="search" class="form-control w-100 mr-sm-6" id="query"
+				name="query" required="required">
 			<button type="submit" class="btn btn-info my-2 my-sm-0">Submit</button>
 		</form>
 
-		<table class="table table-striped table-hover table-responsive">
-			<thead>
-				<tr>
-					<td>ISBN-13:</td>
-					<td>Title:</td>
-					<td>Author:</td>
-					<td>Publish Date:</td>
-					<td>Price:</td>
-					<td></td>
-					<td></td>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="book" items="${books}">
-					<tr>
-						<td><c:out value="${book.isbn13}" /></td>
-						<td><c:out value="${book.title}" /></td>
-						<td><c:out value="${book.author}" /></td>
-						<td><c:out value="${book.publishDate}" /></td>
-						<td><fmt:formatNumber value="${book.price }" type="CURRENCY" /></td>
-						<td><form action="DownloadBook" method="get">
-								<input type="hidden" name="isbn13" value="${book.isbn13}">
-								<button class="btn btn-success">Download</button>
-							</form></td>
-						<td><form action="ViewBookDetails?isbn=${book.isbn13}"
-								method="get">
-								<input type="hidden" name="isbn13" value="${book.isbn13}">
-								<button class="btn btn-primary">Details</button>
-							</form></td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
+		<div class="text-left">
+			<strong>${message}</strong>
+		</div>
 
+		<c:choose>
+			<c:when test="${true }">
+				<table class="table table-striped table-hover table-responsive">
+					<thead>
+						<tr>
+							<td>ISBN-13:</td>
+							<td>Title:</td>
+							<td>Author:</td>
+							<td>Publish Date:</td>
+							<td>Price:</td>
+							<td></td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="book" items="${books}">
+							<tr>
+								<td><c:out value="${book.isbn13}" /></td>
+								<td><c:out value="${book.title}" /></td>
+								<td><c:out value="${book.author}" /></td>
+								<td><c:out value="${book.publishDate}" /></td>
+								<td><fmt:formatNumber value="${book.price }"
+										type="CURRENCY" /></td>
+								<td><form action="DownloadBook" method="get">
+										<input type="hidden" name="isbn13" value="${book.isbn13}">
+										<button class="btn btn-success">Download</button>
+									</form></td>
+								<td><form action="ViewBookDetails?isbn=${book.isbn13}"
+										method="get">
+										<input type="hidden" name="isbn13" value="${book.isbn13}">
+										<button class="btn btn-primary">Details</button>
+									</form></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</c:when>
+		</c:choose>
 
 	</div>
 </header>
