@@ -20,37 +20,28 @@ import examples.pubhub.utilities.DAOUtilities;
 public class SearchBooksByTagServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		// Grab the list of Books from the Database
-		BookDAO dao = DAOUtilities.getBookDAO();
-		List<Book> bookList = dao.getAllBooks();
-
-		// Populate the list into a variable that will be stored in the session
-		request.getSession().setAttribute("books", bookList);
-
-		request.getSession().setAttribute("message", "Enter a tag to filter results"); 
-		
-		request.getRequestDispatcher("searchBooksByTag.jsp").forward(request, response);
-	}
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
-		String query = request.getParameter("query");
-		System.out.println("Searching for books with tag" + query);
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		BookDAO dao = DAOUtilities.getBookDAO();
-		List<Book> bookList = dao.getBooksByTag(query);
+		List<Book> bookList;
 
-		// Populate the list into a variable that will be stored in the session
-		request.getSession().setAttribute("books", bookList);
-		
+		String tag = request.getParameter("tag");
+		if (tag == null) {
+			bookList = dao.getAllBooks();
+			request.getSession().setAttribute("tagSearchMessage", "Enter a tag to filter results"); 
+		} else {
+			tag = tag.trim();
+			bookList = dao.getBooksByTag(tag);
 
-		
-		if (bookList.size() == 0) {
-			request.getSession().setAttribute("message", "No books found for tag '" + query + "'");
+			if (bookList.size() == 0) {
+				request.getSession().setAttribute("tagSearchMessage", "No books found for tag '" + tag + "'");
+			} else {
+				request.getSession().setAttribute("tagSearchMessage", "Showing results for tag: '" + tag + "'");
+			}
 		}
 
+		request.getSession().setAttribute("books", bookList);
 		request.getRequestDispatcher("searchBooksByTag.jsp").forward(request, response);
-	};
-	
+	}
 }

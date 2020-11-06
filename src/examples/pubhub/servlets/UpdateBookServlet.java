@@ -49,6 +49,7 @@ public class UpdateBookServlet extends HttpServlet {
 			isSuccess = dao.updateBook(book) && this.updateTags(request, response);
 		} else {
 			// ASSERT: couldn't find book with isbn. Update failed.
+			System.out.println("UPDATE FAILED");
 			isSuccess = false;
 		}
 
@@ -64,41 +65,44 @@ public class UpdateBookServlet extends HttpServlet {
 	}
 
 	private boolean updateTags(HttpServletRequest request, HttpServletResponse response) {
-		boolean deletionError = false;
-		boolean creationError = false;
+		// The client provides a comma separated list of tags that reflects the
+		// new tag state, e.g.,"fantasy, romance, sci-fi".
+		// Here we add and and remove tags from the database to match this
+		// string of tags.
+
 		String isbn13 = request.getParameter("isbn13");
-		
+
 		TagDAO tagDAO = DAOUtilities.getTagDAO();
 
-		//TODO refactor string splitter into util function
+		// TODO refactor string splitter into util function
 		String[] newTagsArr = request.getParameter("tags").split("\\s*,\\s*");
 		List<String> newTags = Arrays.asList(newTagsArr);
 
 		List<String> oldTags = tagDAO.getAllTagsForBook(isbn13).stream().map(t -> t.getName())
 				.collect(Collectors.toList());
 
-		// Remove tags in the database that have been deleted by the client
+		// Find and delete old tags that have been removed by the client
 		List<String> toDelete = oldTags.stream().filter(t -> !newTags.contains(t)).collect(Collectors.toList());
-
 		for (String tag : toDelete) {
 			boolean isSuccess = tagDAO.deleteTagByISBNAndName(isbn13, tag);
 
 			if (!isSuccess)
-				deletionError = true;
-
+				return false;
 		}
 
-		// Add new tags that do not already exist in the database
-		List<String> toCreate = newTags.stream().filter(t -> !oldTags.contains(t)).collect(Collectors.toList());
-
-		for (String tagName : toCreate) {
-			Tag tag = new Tag(isbn13, tagName);
-			boolean isSuccess = tagDAO.addTag(tag);
+		// Find and add new tags that aren't already in the database
+		List<String> toAdd = newTags.stream().filter(t -> !oldTags.contains(t)).collect(Collectors.toList());
+		for (String tag : toAdd) {
+			Tag t = new Tag(isbn13, tag);
+			boolean isSuccess = tagDAO.addTag(t);
 
 			if (!isSuccess)
-				creationError = true;
+				return false;
 		}
+		
 
-		return !deletionError && !creationError;
+		request.setAttribute("tags", tagDAO.getAllTagsForBook(isbn13));
+
+		return true;
 	}
 }

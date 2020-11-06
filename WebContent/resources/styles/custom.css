@@ -29,6 +29,17 @@ body {
 	text-align: center;
 }
 
+.tagSearchMessage {
+	margin-top: 25px;
+	margin-bottom: 12px;
+	font-size: 1.4rem;
+}
+
+.tagSearchInput {
+	width: 100%;
+	margin-right: 5px;
+}
+
 /* To get Bootstrap's Nav Dropdown to expand on hover */
 /* .dropdown:hover .dropdown-menu { */
 /* 	display: block; */

@@ -31,15 +31,15 @@
 		<hr class="book-primary">
 
 
-		<form action="SearchBooksByTag" method="post"
-			class="form-inline form-group text-left m-b-md">
-			<input type="search" class="form-control w-100 mr-sm-6" id="query"
-				name="query" required="required">
-			<button type="submit" class="btn btn-info my-2 my-sm-0">Submit</button>
+		<form action="SearchBooksByTag" method="get"
+			class="form-inline form-group text-left">
+			<input type="search" class="tagSearchInput form-control" id="tag"
+				name="tag" required="required">
+			<button type="submit" class="btn btn-info form-control">Search</button>
 		</form>
 
-		<div class="text-left">
-			<strong>${message}</strong>
+		<div class="tagSearchMessage text-left">
+			<strong>${tagSearchMessage}</strong>
 		</div>
 
 		<c:choose>
