@@ -1,8 +1,8 @@
-package examples.pubhub.dao;
+package pubhub.dao;
 
 import java.util.List;
 
-import examples.pubhub.model.Book;
+import pubhub.model.Book;
 
 /**
  * Interface for our Data Access Object to handle database queries related to Books.

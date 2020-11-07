@@ -1,4 +1,4 @@
-package examples.pubhub.utilities;
+package pubhub.utilities;
 
 import java.io.File;
 import java.io.FileInputStream;

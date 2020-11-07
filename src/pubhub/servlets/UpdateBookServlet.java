@@ -1,4 +1,4 @@
-package examples.pubhub.servlets;
+package pubhub.servlets;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import examples.pubhub.dao.BookDAO;
-import examples.pubhub.dao.TagDAO;
-import examples.pubhub.model.Book;
-import examples.pubhub.model.Tag;
-import examples.pubhub.utilities.DAOUtilities;
-import examples.pubhub.utilities.TagUtilities;
+import pubhub.dao.BookDAO;
+import pubhub.dao.TagDAO;
+import pubhub.model.Book;
+import pubhub.model.Tag;
+import pubhub.utilities.DAOUtilities;
+import pubhub.utilities.TagUtilities;
 
 /**
  * Servlet implementation class UpdateBookServlet

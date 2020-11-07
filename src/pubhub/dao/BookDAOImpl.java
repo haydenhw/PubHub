@@ -1,4 +1,4 @@
-package examples.pubhub.dao;
+package pubhub.dao;
 
 import java.sql.Blob;
 import java.sql.Connection;
@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import examples.pubhub.model.Book;
-import examples.pubhub.utilities.DAOUtilities;
+import pubhub.model.Book;
+import pubhub.utilities.DAOUtilities;
 
 /**
  * Implementation for the BookDAO, responsible for querying the database for

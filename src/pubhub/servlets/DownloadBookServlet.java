@@ -1,4 +1,4 @@
-package examples.pubhub.servlets;
+package pubhub.servlets;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import examples.pubhub.dao.BookDAO;
-import examples.pubhub.model.Book;
-import examples.pubhub.utilities.DAOUtilities;
+import pubhub.dao.BookDAO;
+import pubhub.model.Book;
+import pubhub.utilities.DAOUtilities;
 
 /**
  * Servlet implementation class DownloadBookServlet

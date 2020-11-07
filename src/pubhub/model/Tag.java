@@ -1,4 +1,4 @@
-package examples.pubhub.model;
+package pubhub.model;
 
 public class Tag {
 	private String isbn13;

@@ -1,4 +1,4 @@
-package examples.pubhub.dao;
+package pubhub.dao;
 
 import java.util.List;
 import java.sql.Connection;
@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import examples.pubhub.model.Tag;
-import examples.pubhub.utilities.DAOUtilities;
+import pubhub.model.Tag;
+import pubhub.utilities.DAOUtilities;
 
 public class TagDAOImpl implements TagDAO {
 	Connection connection = null;

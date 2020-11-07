@@ -33,7 +33,7 @@
 
 		<form action="PublishBook" method="post" class="form-horizontal"
 			enctype="multipart/form-data">
-			<div class="form-group">
+			<div class="form-group">/
 				<label for="isbn13" class="col-sm-4 control-label">ISBN 13</label>
 				<div class="col-sm-5">
 					<input type="text" class="form-control" id="isbn13" name="isbn13"

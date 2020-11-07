@@ -1,8 +1,8 @@
-package examples.pubhub.dao;
+package pubhub.dao;
 
 import java.util.List;
 
-import examples.pubhub.model.Tag;
+import pubhub.model.Tag;
 
 public interface TagDAO {
 	public List<Tag> getAllTagsForBook(String isbn13);

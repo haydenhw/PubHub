@@ -1,4 +1,4 @@
-package examples.pubhub.model;
+package pubhub.model;
 
 import java.time.LocalDate;
 

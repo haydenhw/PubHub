@@ -1,4 +1,4 @@
-package examples.pubhub.servlets;
+package pubhub.servlets;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import examples.pubhub.dao.BookDAO;
-import examples.pubhub.model.Book;
-import examples.pubhub.utilities.DAOUtilities;
+import pubhub.dao.BookDAO;
+import pubhub.model.Book;
+import pubhub.utilities.DAOUtilities;
 
 /*
  * This servlet will take you to the homepage for the Book Publishing module (level 100)

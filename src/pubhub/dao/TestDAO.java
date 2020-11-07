@@ -1,8 +1,8 @@
-package examples.pubhub.dao;
-
-import examples.pubhub.model.Tag;
+package pubhub.dao;
 
 import java.util.List;
+
+import pubhub.model.Tag;
 
 public class TestDAO {
     public TagDAOImpl tagDAO = new TagDAOImpl();

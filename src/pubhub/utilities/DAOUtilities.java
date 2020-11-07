@@ -1,13 +1,13 @@
-package examples.pubhub.utilities;
+package pubhub.utilities;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import examples.pubhub.dao.BookDAO;
-import examples.pubhub.dao.BookDAOImpl;
-import examples.pubhub.dao.TagDAO;
-import examples.pubhub.dao.TagDAOImpl;
+import pubhub.dao.BookDAO;
+import pubhub.dao.BookDAOImpl;
+import pubhub.dao.TagDAO;
+import pubhub.dao.TagDAOImpl;
 
 /**
  * Class used to retrieve DAO Implementations. Serves as a factory. Also manages a single instance of the database connection.
