@@ -19,13 +19,14 @@ import examples.pubhub.dao.TagDAO;
 import examples.pubhub.model.Book;
 import examples.pubhub.model.Tag;
 import examples.pubhub.utilities.DAOUtilities;
+import examples.pubhub.utilities.TagUtilities;
 
 @MultipartConfig // This annotation tells the server that this servlet has
 					// complex data other than forms
 // Notice the lack of the @WebServlet annotation? This servlet is mapped the old
 // fashioned way - Check the web.xml!
 public class PublishBookServlet extends HttpServlet {
-	private	BookDAO bookDAO = DAOUtilities.getBookDAO();
+	private BookDAO bookDAO = DAOUtilities.getBookDAO();
 
 	private static final long serialVersionUID = 1L;
 
@@ -70,58 +71,58 @@ public class PublishBookServlet extends HttpServlet {
 	}
 
 	private boolean addBook(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			Book book = new Book();
-			book.setIsbn13(req.getParameter("isbn13"));
-			book.setTitle(req.getParameter("title"));
-			book.setAuthor(req.getParameter("author"));
-			book.setPublishDate(LocalDate.now());
-			book.setPrice(Double.parseDouble(req.getParameter("price")));
+		Book book = new Book();
+		book.setIsbn13(req.getParameter("isbn13"));
+		book.setTitle(req.getParameter("title"));
+		book.setAuthor(req.getParameter("author"));
+		book.setPublishDate(LocalDate.now());
+		book.setPrice(Double.parseDouble(req.getParameter("price")));
 
-			// Uploading a file requires the data to be sent in "parts", because
-			// one HTTP packet might not be big
-			// enough anymore for all of the data. Here we get the part that has
-			// the file data
-			Part content = req.getPart("content");
+		// Uploading a file requires the data to be sent in "parts", because
+		// one HTTP packet might not be big
+		// enough anymore for all of the data. Here we get the part that has
+		// the file data
+		Part content = req.getPart("content");
 
-			InputStream is = null;
-			ByteArrayOutputStream os = null;
+		InputStream is = null;
+		ByteArrayOutputStream os = null;
 
-			try {
-				is = content.getInputStream();
-				os = new ByteArrayOutputStream();
+		try {
+			is = content.getInputStream();
+			os = new ByteArrayOutputStream();
 
-				byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[1024];
 
-				while (is.read(buffer) != -1) {
-					os.write(buffer);
-				}
-
-				book.setContent(os.toByteArray());
-
-			} catch (IOException e) {
-				System.out.println("Could not upload file!");
-				e.printStackTrace();
-			} finally {
-				if (is != null)
-					is.close();
-				if (os != null)
-					os.close();
+			while (is.read(buffer) != -1) {
+				os.write(buffer);
 			}
 
-			return bookDAO.addBook(book);
+			book.setContent(os.toByteArray());
+
+		} catch (IOException e) {
+			System.out.println("Could not upload file!");
+			e.printStackTrace();
+		} finally {
+			if (is != null)
+				is.close();
+			if (os != null)
+				os.close();
+		}
+
+		return bookDAO.addBook(book);
 	}
 
 	private boolean addTags(HttpServletRequest req, HttpServletResponse resp) {
 		TagDAO tagDAO = DAOUtilities.getTagDAO();
 
-		String[] tagNames = req.getParameter("tags").split("\\s*,\\s*");
-		// TODO ensure that no tags are duplicated. Maybe with a set? 
-		for (String name : tagNames) {
-			Tag tag = new Tag();
-			tag.setIsbn13(req.getParameter("isbn13"));
-			tag.setName(name);
+		List<String> tags = TagUtilities.parseCommaSeparatedTags(req.getParameter("tags"));
 
-			boolean isSuccess = tagDAO.addTag(tag);
+		for (String tag : tags) {
+			Tag t = new Tag();
+			t.setIsbn13(req.getParameter("isbn13"));
+			t.setName(tag);
+
+			boolean isSuccess = tagDAO.addTag(t);
 
 			if (!isSuccess) {
 				return false;
