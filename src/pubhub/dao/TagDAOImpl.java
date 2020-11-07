@@ -16,7 +16,7 @@ public class TagDAOImpl implements TagDAO {
 
 	/*------------------------------------------------------------------------------------------------*/
 
-	// @Override
+	@Override
 	public List<Tag> getAllTagsForBook(String isbn) {
 		List<Tag> tags = new ArrayList<>();
 
@@ -31,7 +31,6 @@ public class TagDAOImpl implements TagDAO {
 
 			while (rs.next()) {
 				Tag tag = new Tag();
-
 				tag.setIsbn13(rs.getString("isbn_13"));
 				tag.setName(rs.getString("tag_name"));
 
@@ -49,7 +48,7 @@ public class TagDAOImpl implements TagDAO {
 
 	/*------------------------------------------------------------------------------------------------*/
 
-	// @Override
+	@Override
 	public List<String> getTagNamesForBook(String isbn) {
 		List<String> tags = new ArrayList<>();
 
@@ -77,7 +76,7 @@ public class TagDAOImpl implements TagDAO {
 
 	/*------------------------------------------------------------------------------------------------*/
 
-	// @Override
+	@Override
 	public boolean addTag(Tag tag) {
 		try {
 			connection = DAOUtilities.getConnection();
@@ -102,7 +101,7 @@ public class TagDAOImpl implements TagDAO {
 
 	/*------------------------------------------------------------------------------------------------*/
 
-	// @Override
+	@Override
 	public boolean deleteTagByISBNAndName(String isbn, String name) {
 		try {
 			connection = DAOUtilities.getConnection();

@@ -113,22 +113,22 @@ public class PublishBookServlet extends HttpServlet {
 	}
 
 	private boolean addTags(HttpServletRequest req, HttpServletResponse resp) {
+		boolean isSuccess = true;
 		TagDAO tagDAO = DAOUtilities.getTagDAO();
 
 		List<String> tags = TagUtilities.parseCommaSeparatedTags(req.getParameter("tags"));
-
 		for (String tag : tags) {
 			Tag t = new Tag();
 			t.setIsbn13(req.getParameter("isbn13"));
 			t.setName(tag);
 
-			boolean isSuccess = tagDAO.addTag(t);
+			boolean addSuccess = tagDAO.addTag(t);
 
-			if (!isSuccess)
-				return false;
+			if (!addSuccess)
+				isSuccess = false;
 		}
 
-		return true;
+		return isSuccess;
 	}
 
 }

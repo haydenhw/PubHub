@@ -66,10 +66,10 @@ public class UpdateBookServlet extends HttpServlet {
 
 
 	private boolean updateTags(HttpServletRequest request, HttpServletResponse response) {
-		// The client provides a comma separated list of tags that reflects the
-		// new tag state, e.g.,"fantasy, romance, sci-fi".
-		// Here we add and and remove tags from the database to match this
-		// string of tags.
+		// The client provides a comma separated string of tags that reflects the
+		// next tag state, e.g.,"fantasy, romance, sci-fi".
+		// Here we add and and remove tags from the database to match 
+		// this comma separated string.
 
 		boolean isSuccess = true;
 

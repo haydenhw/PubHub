@@ -9,12 +9,8 @@ public class TestDAO {
 
     public static void main(String[] args) {
     	TestDAO test = new TestDAO();
-    	
 
     	test.addTag();
-    	
-//    	test.tagDAO.deleteTagByISBNAndName("12345", "C++");
-    	
     }
 
 	public void addTag() {

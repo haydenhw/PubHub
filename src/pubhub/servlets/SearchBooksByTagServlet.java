@@ -37,7 +37,7 @@ public class SearchBooksByTagServlet extends HttpServlet {
 			if (bookList.size() == 0) {
 				request.getSession().setAttribute("tagSearchMessage", "No books found for tag '" + tag + "'");
 			} else {
-				request.getSession().setAttribute("tagSearchMessage", "Showing books that include tag: '" + tag + "'");
+				request.getSession().setAttribute("tagSearchMessage", "Showing books with tags similar to: '" + tag + "'");
 			}
 		}
 
