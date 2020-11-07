@@ -20,6 +20,13 @@ public class BookDAOImpl implements BookDAO {
 
 	Connection connection = null; // Our connection to the database
 	PreparedStatement stmt = null; // We use prepared statements to help protect against SQL injection
+	
+	String getBooksWithTagsSql = (
+				"SELECT books.isbn_13, title, author, publish_date, price, content, string_agg(tag_name, ', ') tags FROM books \n"
+					+ "LEFT JOIN book_tags \n"
+					+ "ON books.isbn_13=book_tags.isbn_13 \n"
+					+ "GROUP BY books.isbn_13"
+	); 
 
 	/*------------------------------------------------------------------------------------------------*/
 
@@ -30,7 +37,7 @@ public class BookDAOImpl implements BookDAO {
 
 		try {
 			connection = DAOUtilities.getConnection(); // Get our database connection from the manager
-			String sql = "SELECT * FROM Books"; // Our SQL query
+			String sql = this.getBooksWithTagsSql;
 			stmt = connection.prepareStatement(sql); // Creates the prepared statement from the query
 
 			ResultSet rs = stmt.executeQuery(); // Queries the database
@@ -45,6 +52,8 @@ public class BookDAOImpl implements BookDAO {
 				book.setIsbn13(rs.getString("isbn_13"));
 				book.setAuthor(rs.getString("author"));
 				book.setTitle(rs.getString("title"));
+				book.setTags(rs.getString("tags"));
+
 
 				// The SQL DATE datatype maps to java.sql.Date... which isn't well supported
 				// anymore.
@@ -234,10 +243,10 @@ public class BookDAOImpl implements BookDAO {
 
 		try {
 			connection = DAOUtilities.getConnection();
-			String sql = "SELECT * FROM Books JOIN Book_Tags ON Books.isbn_13=Book_Tags.isbn_13 WHERE tag_name=?";
+			String sql = "SELECT * FROM (" + this.getBooksWithTagsSql + ") as booksWithTags WHERE tags LIKE ?";
 			stmt = connection.prepareStatement(sql);
 
-			stmt.setString(1, tagName);
+			stmt.setString(1, "%" + tagName + "%");
 
 			ResultSet rs = stmt.executeQuery();
 
@@ -249,6 +258,7 @@ public class BookDAOImpl implements BookDAO {
 				book.setTitle(rs.getString("title"));
 				book.setPublishDate(rs.getDate("publish_date").toLocalDate());
 				book.setPrice(rs.getDouble("price"));
+				book.setTags(rs.getString("tags"));
 				book.setContent(rs.getBytes("content"));
 
 				books.add(book);
