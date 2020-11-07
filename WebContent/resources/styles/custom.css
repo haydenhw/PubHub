@@ -35,9 +35,13 @@ body {
 	font-size: 1.4rem;
 }
 
-.tagSearchInput {
-	width: 100%;
+.form-inline .tagSearchInput {
+	width: 28%;
 	margin-right: 5px;
+}
+
+.addTagsHint {
+	padding: .2em .4em;
 }
 
 /* To get Bootstrap's Nav Dropdown to expand on hover */

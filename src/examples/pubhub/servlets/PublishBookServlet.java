@@ -124,9 +124,8 @@ public class PublishBookServlet extends HttpServlet {
 
 			boolean isSuccess = tagDAO.addTag(t);
 
-			if (!isSuccess) {
+			if (!isSuccess)
 				return false;
-			}
 		}
 
 		return true;

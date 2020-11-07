@@ -29,7 +29,7 @@ public class SearchBooksByTagServlet extends HttpServlet {
 		String tag = request.getParameter("tag");
 		if (tag == null) {
 			bookList = dao.getAllBooks();
-			request.getSession().setAttribute("tagSearchMessage", "Enter a tag to filter results"); 
+			request.getSession().setAttribute("tagSearchMessage", "Search for a tag to filter results"); 
 		} else {
 			tag = tag.trim();
 			bookList = dao.getBooksByTag(tag);
@@ -37,7 +37,7 @@ public class SearchBooksByTagServlet extends HttpServlet {
 			if (bookList.size() == 0) {
 				request.getSession().setAttribute("tagSearchMessage", "No books found for tag '" + tag + "'");
 			} else {
-				request.getSession().setAttribute("tagSearchMessage", "Showing results for tag: '" + tag + "'");
+				request.getSession().setAttribute("tagSearchMessage", "Showing books that include tag: '" + tag + "'");
 			}
 		}
 
