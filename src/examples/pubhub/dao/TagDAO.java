@@ -9,6 +9,5 @@ public interface TagDAO {
 	public List<String> getTagNamesForBook(String isbn13);
 
 	public boolean addTag(Tag tag);
-
 	public boolean deleteTagByISBNAndName(String isbn, String name);
 }

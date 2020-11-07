@@ -19,20 +19,17 @@ public class Tag {
     	this.isbn13 = isbn;
     }
     
-    public void setName(String name) {
-        this.tagName = name;
-    }
-    
     public String getIsbn13() {
     	return this.isbn13;
     	
+    }
+
+    public void setName(String name) {
+        this.tagName = name;
     }
     
     public String getName() {
     	return this.tagName;
     }
-
-
-    // TODO add rest of getters and setters
 
 }
