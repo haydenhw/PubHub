@@ -7,6 +7,7 @@ public class Book {
 	private String isbn13;			// International Standard Book Number, unique
 	private String title;
 	private String author;
+	private String tags;
 	private LocalDate publishDate;	// Date of publish to the website
 	
 	private double price;
@@ -62,6 +63,14 @@ public class Book {
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+	
+	public String getTags() {
+		return tags;
+	}
+	
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 
 	public LocalDate getPublishDate() {
