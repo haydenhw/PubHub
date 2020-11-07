@@ -22,7 +22,7 @@ public class TagDAOImpl implements TagDAO {
 
 		try {
 			connection = DAOUtilities.getConnection();
-			String sql = "SELECT * FROM book_tags WHERE isbn_13=?";
+			String sql = "SELECT * FROM Book_Tags WHERE isbn_13=?";
 			stmt = connection.prepareStatement(sql);
 
 			stmt.setString(1, isbn);
@@ -50,6 +50,34 @@ public class TagDAOImpl implements TagDAO {
 	/*------------------------------------------------------------------------------------------------*/
 
 	// @Override
+	public List<String> getTagNamesForBook(String isbn) {
+		List<String> tags = new ArrayList<>();
+
+		try {
+			connection = DAOUtilities.getConnection();
+			String sql = "SELECT tag_name FROM Book_Tags WHERE isbn_13=?";
+			stmt = connection.prepareStatement(sql);
+
+			stmt.setString(1, isbn);
+
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				tags.add(rs.getString("tag_name"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+
+		return tags;
+	}
+
+	/*------------------------------------------------------------------------------------------------*/
+
+	// @Override
 	public boolean addTag(Tag tag) {
 		try {
 			connection = DAOUtilities.getConnection();
@@ -59,7 +87,7 @@ public class TagDAOImpl implements TagDAO {
 			stmt.setString(1, tag.getIsbn13());
 			stmt.setString(2, tag.getName());
 
-			if (stmt.executeUpdate() != 0) 
+			if (stmt.executeUpdate() != 0)
 				return true;
 			else
 				return false;
@@ -73,33 +101,30 @@ public class TagDAOImpl implements TagDAO {
 	}
 
 	/*------------------------------------------------------------------------------------------------*/
-	
-	//@Override
+
+	// @Override
 	public boolean deleteTagByISBNAndName(String isbn, String name) {
 		try {
 			connection = DAOUtilities.getConnection();
 			String sql = "DELETE FROM Book_Tags WHERE isbn_13=? AND tag_name=?";
 			stmt = connection.prepareStatement(sql);
-			
+
 			stmt.setString(1, isbn);
 			stmt.setString(2, name);
-			
+
 			if (stmt.executeUpdate() != 0)
 				return true;
 			else
 				return false;
 
-			
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
-			
+
 		} finally {
 			closeResources();
 		}
 	}
-	
-	
 
 	/*------------------------------------------------------------------------------------------------*/
 

@@ -16,6 +16,7 @@ import examples.pubhub.dao.TagDAO;
 import examples.pubhub.model.Book;
 import examples.pubhub.model.Tag;
 import examples.pubhub.utilities.DAOUtilities;
+import examples.pubhub.utilities.TagUtilities;
 
 /**
  * Servlet implementation class UpdateBookServlet
@@ -45,7 +46,6 @@ public class UpdateBookServlet extends HttpServlet {
 			book.setPrice(Double.parseDouble(request.getParameter("price")));
 			request.setAttribute("book", book);
 
-			// TODO figure out how to set attribute for Tag
 			isSuccess = dao.updateBook(book) && this.updateTags(request, response);
 		} else {
 			// ASSERT: couldn't find book with isbn. Update failed.
@@ -64,45 +64,50 @@ public class UpdateBookServlet extends HttpServlet {
 		}
 	}
 
+
 	private boolean updateTags(HttpServletRequest request, HttpServletResponse response) {
 		// The client provides a comma separated list of tags that reflects the
 		// new tag state, e.g.,"fantasy, romance, sci-fi".
 		// Here we add and and remove tags from the database to match this
 		// string of tags.
 
-		String isbn13 = request.getParameter("isbn13");
+		boolean isSuccess = true;
 
+		String isbn13 = request.getParameter("isbn13");
 		TagDAO tagDAO = DAOUtilities.getTagDAO();
 
-		// TODO refactor string splitter into util function
-		String[] newTagsArr = request.getParameter("tags").split("\\s*,\\s*");
-		List<String> newTags = Arrays.asList(newTagsArr);
-
-		List<String> oldTags = tagDAO.getAllTagsForBook(isbn13).stream().map(t -> t.getName())
-				.collect(Collectors.toList());
+		List<String> currentTags = tagDAO.getTagNamesForBook(isbn13);
+		List<String> nextTags  = TagUtilities.parseCommaSeparatedTags(request.getParameter("tags"));
 
 		// Find and delete old tags that have been removed by the client
-		List<String> toDelete = oldTags.stream().filter(t -> !newTags.contains(t)).collect(Collectors.toList());
+		List<String> toDelete = this.findRemovedTags(currentTags, nextTags);
 		for (String tag : toDelete) {
-			boolean isSuccess = tagDAO.deleteTagByISBNAndName(isbn13, tag);
+			boolean deleteSuccess = tagDAO.deleteTagByISBNAndName(isbn13, tag);
 
-			if (!isSuccess)
-				return false;
+			if (!deleteSuccess)
+				isSuccess = false;
 		}
 
 		// Find and add new tags that aren't already in the database
-		List<String> toAdd = newTags.stream().filter(t -> !oldTags.contains(t)).collect(Collectors.toList());
+		List<String> toAdd = this.findNewTags(currentTags, nextTags);
 		for (String tag : toAdd) {
 			Tag t = new Tag(isbn13, tag);
-			boolean isSuccess = tagDAO.addTag(t);
+			boolean addSuccess = tagDAO.addTag(t);
 
-			if (!isSuccess)
-				return false;
+			if (!addSuccess )
+				isSuccess = false;
 		}
-		
 
 		request.setAttribute("tags", tagDAO.getAllTagsForBook(isbn13));
 
-		return true;
+		return isSuccess;
 	}
+	
+	private List<String> findRemovedTags(List<String> currentTags, List<String> nextTags) {
+		return currentTags.stream().filter(t -> !nextTags.contains(t)).collect(Collectors.toList());
+	}
+
+	private List<String> findNewTags(List<String> currentTags, List<String> nextTags) { 
+		return nextTags.stream().filter(t -> !currentTags.contains(t)).collect(Collectors.toList());
+	} 
 }
